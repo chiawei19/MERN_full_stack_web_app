@@ -14,3 +14,9 @@ This repo is for the implementation of the following book:
 
 ## Chapter 6
 ![snapshot of chp6](./snapshot/chp6_snapshot.png)
+
+## Chapter 7
+install different version of graphql to make npm start
+`> npm install graphql@14.2.1`
+`> npm install`
+`> npm start`
