@@ -4,7 +4,7 @@
     "description": "Pro MERN Stack (2nd Edition) API",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon -w uiserver.js uiserver.js",
+        "start": "nodemon -w uiserver.js -w .env uiserver.js",
         "compile": "babel src --out-dir public",
         "watch": "babel src --out-dir public --watch --verbose"
     },
@@ -16,6 +16,7 @@
     "license": "@Chia-wei",
     "homepage": "https://github.com/cw19cs/pro-mern-stack-2",
     "dependencies": {
+        "dotenv": "^6.2.0",
         "express": "^4.16.4",
         "nodemon": "^1.18.9"
     },
