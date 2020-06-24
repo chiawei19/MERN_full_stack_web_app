@@ -8,3 +8,9 @@ This repo is for the implementation of the following book:
 
 ## Chapter 4
 ![snapshot of chp4](./snapshot/chp4_snapshot.png)
+
+## Chapter 5
+![snapshot of chp5](./snapshot/chp5_snapshot.png)
+
+## Chapter 6
+![snapshot of chp6](./snapshot/chp6_snapshot.png)
