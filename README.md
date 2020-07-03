@@ -20,3 +20,8 @@ install different version of graphql to make npm start
 `> npm install graphql@14.2.1`
 `> npm install`
 `> npm start`
+Error on p.214 function IssueTable( {issue<b>s</b>} )
+![snapshot of chp7](./snapshot/chp7_snapshot.png)
+
+## Chapter 8
+![snapshot of chp8](./snapshot/chp8_snapshot.png)
