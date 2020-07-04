@@ -12,7 +12,7 @@
         "compile": "webpack --mode production",
         "#watch": "Compile, and recompile on any changes.",
         "watch": "webpack --watch"
-      },
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/cw19cs/MERN_full_stack_web_app"
@@ -29,6 +29,7 @@
         "prop-types": "^15.7.2",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-router-dom": "^4.3.1",
         "whatwg-fetch": "^3.1.0"
     },
     "devDependencies": {
