@@ -25,3 +25,10 @@ Error on p.214 function IssueTable( {issue<b>s</b>} )
 
 ## Chapter 8
 ![snapshot of chp8](./snapshot/chp8_snapshot.png)
+
+## Chapeter 9
+In listing 9-21, in the loadData() function in IssueDetail.jsx, a small change must be made in order to make the code work properly with recent versions of GraphQL.
+  `const data = await graphQLFetch(query, { id });`
+needs to be changes as
+  `const data = await graphQLFetch(query, { id: parseInt(id, 10) });`
+![snapshot of chp9](./snapshot/chp9_snapshot.png)
