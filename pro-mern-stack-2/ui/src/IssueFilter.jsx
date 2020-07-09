@@ -9,7 +9,7 @@ class IssueFilter extends React.Component {
     super();
     const params = new URLSearchParams(search);
     this.state = {
-      status: params.get('status' || ''),
+      status: params.get('status') || '',
       effortMin: params.get('effortMin') || '',
       effortMax: params.get('effortMax') || '',
       changed: false,

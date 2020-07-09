@@ -137,7 +137,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
 /******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
@@ -541,7 +541,7 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this);
     var params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
     _this.state = {
-      status: params.get('status' || false),
+      status: params.get('status') || '',
       effortMin: params.get('effortMin') || '',
       effortMax: params.get('effortMax') || '',
       changed: false
