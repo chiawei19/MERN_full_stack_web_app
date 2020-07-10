@@ -1184,6 +1184,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
     };
     _this.createIssue = _this.createIssue.bind(_assertThisInitialized(_this));
     _this.closeIssue = _this.closeIssue.bind(_assertThisInitialized(_this));
+    _this.deleteIssue = _this.deleteIssue.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1329,13 +1330,70 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
       return closeIssue;
     }()
   }, {
+    key: "deleteIssue",
+    value: function () {
+      var _deleteIssue = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(index) {
+        var query, issues, _this$props, _this$props$location, pathname, search, history, id, data;
+
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                query = "mutation issueDelete($id: Int!) {\n      issueDelete(id: $id)\n    }";
+                issues = this.state.issues;
+                _this$props = this.props, _this$props$location = _this$props.location, pathname = _this$props$location.pathname, search = _this$props$location.search, history = _this$props.history;
+                id = issues[index].id;
+                _context4.next = 6;
+                return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, {
+                  id: id
+                });
+
+              case 6:
+                data = _context4.sent;
+
+                if (data && data.issueDelete) {
+                  this.setState(function (prevState) {
+                    var newList = _toConsumableArray(prevState.issues);
+
+                    if (pathname === "/issues/".concat(id)) {
+                      history.push({
+                        pathname: '/issues',
+                        search: search
+                      });
+                    }
+
+                    newList.splice(index, 1);
+                    return {
+                      issues: newList
+                    };
+                  });
+                } else {
+                  this.loadData();
+                }
+
+              case 8:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function deleteIssue(_x3) {
+        return _deleteIssue.apply(this, arguments);
+      }
+
+      return deleteIssue;
+    }()
+  }, {
     key: "render",
     value: function render() {
       var issues = this.state.issues;
       var match = this.props.match;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Issue Tracker"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueTable_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
         issues: issues,
-        closeIssue: this.closeIssue
+        closeIssue: this.closeIssue,
+        deleteIssue: this.deleteIssue
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueAdd_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
         createIssue: this.createIssue
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
@@ -1390,6 +1448,7 @@ var IssueRow = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"
   var issue = _ref.issue,
       search = _ref.location.search,
       closeIssue = _ref.closeIssue,
+      deleteIssue = _ref.deleteIssue,
       index = _ref.index;
   var selectLocation = {
     pathname: "/issues/".concat(issue.id),
@@ -1404,16 +1463,23 @@ var IssueRow = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"
     onClick: function onClick() {
       closeIssue(index);
     }
-  }, "Close")));
+  }, "Close"), ' | ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    onClick: function onClick() {
+      deleteIssue(index);
+    }
+  }, "Delete")));
 });
 function IssueTable(_ref2) {
   var issues = _ref2.issues,
-      closeIssue = _ref2.closeIssue;
+      closeIssue = _ref2.closeIssue,
+      deleteIssue = _ref2.deleteIssue;
   var issueRows = issues.map(function (issue, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(IssueRow, {
       key: issue.id,
       issue: issue,
       closeIssue: closeIssue,
+      deleteIssue: deleteIssue,
       index: index
     });
   });
