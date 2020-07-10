@@ -744,7 +744,7 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
                 id = this.props.match.params.id;
                 _context.next = 4;
                 return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_2__["default"])(query, {
-                  id: id
+                  id: parseInt(id, 10)
                 });
 
               case 4:

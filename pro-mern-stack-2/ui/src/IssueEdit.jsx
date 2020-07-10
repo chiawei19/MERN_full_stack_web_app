@@ -62,7 +62,7 @@ export default class IssueEdit extends React.Component {
     }`;
 
     const { match: { params: { id } } } = this.props;
-    const data = await graphQLFetch(query, { id });
+    const data = await graphQLFetch(query, { id: parseInt(id, 10) });
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
   }
 
