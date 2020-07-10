@@ -16,24 +16,27 @@ This repo is for the implementation of the following book:
 ![snapshot of chp6](./snapshot/chp6_snapshot.png)
 
 ## Chapter 7
+![snapshot of chp7](./snapshot/chp7_snapshot.png)
 install different version of graphql to make npm start
 `> npm install graphql@14.2.1`
 `> npm install`
 `> npm start`
 Error on p.214 function IssueTable( {issue<b>s</b>} )
-![snapshot of chp7](./snapshot/chp7_snapshot.png)
 
 ## Chapter 8
 ![snapshot of chp8](./snapshot/chp8_snapshot.png)
 
 ## Chapter 9
+![snapshot of chp9](./snapshot/chp9_snapshot.png)
 In listing 9-21, in the loadData() function in IssueDetail.jsx, a small change must be made in order to make the code work properly with recent versions of GraphQL.
   ```const data = await graphQLFetch(query, { id });```
 needs to be changes as
   ```const data = await graphQLFetch(query, { id: parseInt(id, 10) });```
-![snapshot of chp9](./snapshot/chp9_snapshot.png)
+
 
 ## Chapter 10
+![snapshot of chp10](./snapshot/chp10_1_snapshot.png)
+![snapshot of chp10](./snapshot/chp10_2_snapshot.png)
  In listing 10-7, in the loadData() function in IssueEdit.jsx, a small change 
  must be made in order to make the code work properly with recent versions of GraphQL. 
   ```const data = await graphQLFetch(query, { id });```
