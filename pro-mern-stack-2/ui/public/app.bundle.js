@@ -393,7 +393,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/es/index.js");
 /* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
+/* harmony import */ var _withToast_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./withToast.jsx */ "./src/withToast.jsx");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -438,16 +438,11 @@ var IssueAddNavItem = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      showing: false,
-      toastVisible: false,
-      toastMessage: '',
-      toastType: 'success'
+      showing: false
     };
     _this.showModal = _this.showModal.bind(_assertThisInitialized(_this));
     _this.hideModal = _this.hideModal.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
-    _this.showError = _this.showError.bind(_assertThisInitialized(_this));
-    _this.dismissToast = _this.dismissToast.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -466,26 +461,10 @@ var IssueAddNavItem = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
-    key: "showError",
-    value: function showError(message) {
-      this.setState({
-        toastVisible: true,
-        toastMessage: message,
-        toastType: 'danger'
-      });
-    }
-  }, {
-    key: "dismissToast",
-    value: function dismissToast() {
-      this.setState({
-        toastVisible: false
-      });
-    }
-  }, {
     key: "handleSubmit",
     value: function () {
       var _handleSubmit = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var form, issue, query, data, history;
+        var form, issue, query, showError, data, history;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -499,12 +478,13 @@ var IssueAddNavItem = /*#__PURE__*/function (_React$Component) {
                   due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10)
                 };
                 query = "mutation issueAdd($issue: IssueInputs!) {\n      issueAdd(issue: $issue) {\n        id\n      }\n    }";
-                _context.next = 7;
+                showError = this.props.showError;
+                _context.next = 8;
                 return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_3__["default"])(query, {
                   issue: issue
-                }, this.showError);
+                }, showError);
 
-              case 7:
+              case 8:
                 data = _context.sent;
 
                 if (data) {
@@ -512,7 +492,7 @@ var IssueAddNavItem = /*#__PURE__*/function (_React$Component) {
                   history.push("/edit/".concat(data.issueAdd.id));
                 }
 
-              case 9:
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -530,10 +510,6 @@ var IssueAddNavItem = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var showing = this.state.showing;
-      var _this$state = this.state,
-          toastVisible = _this$state.toastVisible,
-          toastMessage = _this$state.toastMessage,
-          toastType = _this$state.toastType;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NavItem"], {
         onClick: this.showModal
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["OverlayTrigger"], {
@@ -564,18 +540,14 @@ var IssueAddNavItem = /*#__PURE__*/function (_React$Component) {
       }, "Submit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
         bsStyle: "link",
         onClick: this.hideModal
-      }, "Cancel")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        showing: toastVisible,
-        onDismiss: this.dismissToast,
-        bsStyle: toastType
-      }, toastMessage));
+      }, "Cancel")))));
     }
   }]);
 
   return IssueAddNavItem;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(IssueAddNavItem));
+/* harmony default export */ __webpack_exports__["default"] = (Object(_withToast_jsx__WEBPACK_IMPORTED_MODULE_4__["default"])(Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(IssueAddNavItem)));
 
 /***/ }),
 
@@ -751,7 +723,6 @@ var IssueDetail = /*#__PURE__*/function (_React$Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return IssueEdit; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
@@ -762,7 +733,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _NumInput_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./NumInput.jsx */ "./src/NumInput.jsx");
 /* harmony import */ var _DateInput_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DateInput.jsx */ "./src/DateInput.jsx");
 /* harmony import */ var _TextInput_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TextInput.jsx */ "./src/TextInput.jsx");
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
+/* harmony import */ var _withToast_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./withToast.jsx */ "./src/withToast.jsx");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -823,19 +794,13 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
     _this.state = {
       issue: {},
       invalidFields: {},
-      showingValidation: false,
-      toastVisible: false,
-      toastMessage: '',
-      toastType: 'success'
+      showingValidation: false
     };
     _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.onValidityChange = _this.onValidityChange.bind(_assertThisInitialized(_this));
     _this.dismissValidation = _this.dismissValidation.bind(_assertThisInitialized(_this));
     _this.showValidation = _this.showValidation.bind(_assertThisInitialized(_this));
-    _this.showSuccess = _this.showSuccess.bind(_assertThisInitialized(_this));
-    _this.showError = _this.showError.bind(_assertThisInitialized(_this));
-    _this.dismissToast = _this.dismissToast.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -884,7 +849,7 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
     key: "handleSubmit",
     value: function () {
       var _handleSubmit = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var _this$state, issue, invalidFields, query, id, created, changes, data;
+        var _this$state, issue, invalidFields, query, id, created, changes, _this$props, showSuccess, showError, data;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -904,23 +869,24 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
               case 5:
                 query = "mutation issueUpdate(\n      $id: Int!\n      $changes: IssueUpdateInputs!\n    ){ issueUpdate(\n        id: $id\n        changes: $changes ){\n          id title status owner\n          effort created due description\n      }\n    }";
                 id = issue.id, created = issue.created, changes = _objectWithoutProperties(issue, ["id", "created"]);
-                _context.next = 9;
+                _this$props = this.props, showSuccess = _this$props.showSuccess, showError = _this$props.showError;
+                _context.next = 10;
                 return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__["default"])(query, {
                   changes: changes,
                   id: id
-                }, this.showError);
+                }, showError);
 
-              case 9:
+              case 10:
                 data = _context.sent;
 
                 if (data) {
                   this.setState({
                     issue: data.issueUpdate
                   });
-                  this.showSuccess('Updated issue successfully');
+                  showSuccess('Updated issue successfully');
                 }
 
-              case 11:
+              case 12:
               case "end":
                 return _context.stop();
             }
@@ -938,17 +904,18 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
     key: "loadData",
     value: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        var query, id, data;
+        var query, _this$props2, id, showError, data;
+
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 query = "query issue($id: Int!) {\n      issue(id: $id) {\n        id title status owner\n        effort created due description\n      }\n    }";
-                id = this.props.match.params.id;
+                _this$props2 = this.props, id = _this$props2.match.params.id, showError = _this$props2.showError;
                 _context2.next = 4;
                 return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__["default"])(query, {
                   id: parseInt(id, 10)
-                }, this.showError);
+                }, showError);
 
               case 4:
                 data = _context2.sent;
@@ -986,39 +953,10 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
-    key: "showSuccess",
-    value: function showSuccess(message) {
-      this.setState({
-        toastVisible: true,
-        toastMessage: message,
-        toastType: 'success'
-      });
-    }
-  }, {
-    key: "showError",
-    value: function showError(message) {
-      this.setState({
-        toastVisible: true,
-        toastMessage: message,
-        toastType: 'danger'
-      });
-    }
-  }, {
-    key: "dismissToast",
-    value: function dismissToast() {
-      this.setState({
-        toastVisible: false
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
       var id = this.state.issue.id;
       var propsId = this.props.match.params.id;
-      var _this$state2 = this.state,
-          toastVisible = _this$state2.toastVisible,
-          toastMessage = _this$state2.toastMessage,
-          toastType = _this$state2.toastType;
 
       if (id == null) {
         if (propsId != null) {
@@ -1028,9 +966,9 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
         return null;
       }
 
-      var _this$state3 = this.state,
-          invalidFields = _this$state3.invalidFields,
-          showingValidation = _this$state3.showingValidation;
+      var _this$state2 = this.state,
+          invalidFields = _this$state2.invalidFields,
+          showingValidation = _this$state2.showingValidation;
       var validationMessage;
 
       if (Object.keys(invalidFields).length !== 0 && showingValidation) {
@@ -1155,18 +1093,16 @@ var IssueEdit = /*#__PURE__*/function (_React$Component) {
         to: "/edit/".concat(id - 1)
       }, "Prev"), ' | ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/edit/".concat(id + 1)
-      }, "Next")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-        showing: toastVisible,
-        onDismiss: this.dismissToast,
-        bsStyle: toastType
-      }, toastMessage));
+      }, "Next")));
     }
   }]);
 
   return IssueEdit;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-
+var IssueEditWithToast = Object(_withToast_jsx__WEBPACK_IMPORTED_MODULE_8__["default"])(IssueEdit);
+IssueEditWithToast.fetchData = IssueEdit.fetchData;
+/* harmony default export */ __webpack_exports__["default"] = (IssueEditWithToast);
 
 /***/ }),
 
@@ -1385,7 +1321,6 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return IssueList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! url-search-params */ "./node_modules/url-search-params/build/url-search-params.node.js");
@@ -1396,7 +1331,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _IssueTable_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./IssueTable.jsx */ "./src/IssueTable.jsx");
 /* harmony import */ var _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./IssueDetail.jsx */ "./src/IssueDetail.jsx");
 /* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
+/* harmony import */ var _withToast_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./withToast.jsx */ "./src/withToast.jsx");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -1457,16 +1392,10 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this);
     _this.state = {
-      issues: [],
-      toastVisible: false,
-      toastMessage: '',
-      toastType: 'info'
+      issues: []
     };
     _this.closeIssue = _this.closeIssue.bind(_assertThisInitialized(_this));
     _this.deleteIssue = _this.deleteIssue.bind(_assertThisInitialized(_this));
-    _this.showSuccess = _this.showSuccess.bind(_assertThisInitialized(_this));
-    _this.showError = _this.showError.bind(_assertThisInitialized(_this));
-    _this.dismissToast = _this.dismissToast.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1489,12 +1418,13 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
     key: "loadData",
     value: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var search, params, vars, effortMin, effortMax, query, data;
+        var _this$props, search, showError, params, vars, effortMin, effortMax, query, data;
+
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                search = this.props.location.search;
+                _this$props = this.props, search = _this$props.location.search, showError = _this$props.showError;
                 params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
                 vars = {};
                 if (params.get('status')) vars.status = params.get('status');
@@ -1504,7 +1434,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
                 if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
                 query = "query issueList(\n      $status: StatusType\n      $effortMin: Int\n      $effortMax: Int\n    ) {\n      issueList (\n        status: $status\n        effortMin: $effortMin\n        effortMax: $effortMax\n      ) {\n        id title status owner\n        created effort due\n      }\n    }";
                 _context.next = 11;
-                return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, vars, this.showError);
+                return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, vars, showError);
 
               case 11:
                 data = _context.sent;
@@ -1533,19 +1463,20 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
     key: "closeIssue",
     value: function () {
       var _closeIssue = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(index) {
-        var query, issues, data;
+        var query, issues, showError, data;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 query = "mutation issueClose($id: Int!) {\n      issueUpdate(id: $id, changes: { status: Closed }) {\n        id title status owner\n        effort created due description\n      }\n    }";
                 issues = this.state.issues;
-                _context2.next = 4;
+                showError = this.props.showError;
+                _context2.next = 5;
                 return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, {
                   id: issues[index].id
-                }, this.showError);
+                }, showError);
 
-              case 4:
+              case 5:
                 data = _context2.sent;
 
                 if (data) {
@@ -1561,7 +1492,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
                   this.loadData();
                 }
 
-              case 6:
+              case 7:
               case "end":
                 return _context2.stop();
             }
@@ -1579,9 +1510,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
     key: "deleteIssue",
     value: function () {
       var _deleteIssue = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(index) {
-        var _this2 = this;
-
-        var query, issues, _this$props, _this$props$location, pathname, search, history, id, data;
+        var query, issues, _this$props2, _this$props2$location, pathname, search, history, _this$props3, showSuccess, showError, id, data;
 
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
@@ -1589,14 +1518,15 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
               case 0:
                 query = "mutation issueDelete($id: Int!) {\n      issueDelete(id: $id)\n    }";
                 issues = this.state.issues;
-                _this$props = this.props, _this$props$location = _this$props.location, pathname = _this$props$location.pathname, search = _this$props$location.search, history = _this$props.history;
+                _this$props2 = this.props, _this$props2$location = _this$props2.location, pathname = _this$props2$location.pathname, search = _this$props2$location.search, history = _this$props2.history;
+                _this$props3 = this.props, showSuccess = _this$props3.showSuccess, showError = _this$props3.showError;
                 id = issues[index].id;
-                _context3.next = 6;
+                _context3.next = 7;
                 return Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, {
                   id: id
-                }, this.showError);
+                }, showError);
 
-              case 6:
+              case 7:
                 data = _context3.sent;
 
                 if (data && data.issueDelete) {
@@ -1611,9 +1541,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
                     }
 
                     newList.splice(index, 1);
-
-                    _this2.showSuccess("Deleted issue ".concat(id, " successfully."));
-
+                    showSuccess("Deleted issue ".concat(id, " successfully."));
                     return {
                       issues: newList
                     };
@@ -1622,7 +1550,7 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
                   this.loadData();
                 }
 
-              case 8:
+              case 9:
               case "end":
                 return _context3.stop();
             }
@@ -1637,39 +1565,10 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
       return deleteIssue;
     }()
   }, {
-    key: "showSuccess",
-    value: function showSuccess(message) {
-      this.setState({
-        toastVisible: true,
-        toastMessage: message,
-        toastType: 'success'
-      });
-    }
-  }, {
-    key: "showError",
-    value: function showError(message) {
-      this.setState({
-        toastVisible: true,
-        toastMessage: message,
-        toastType: 'danger'
-      });
-    }
-  }, {
-    key: "dismissToast",
-    value: function dismissToast() {
-      this.setState({
-        toastVisible: false
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
       var issues = this.state.issues;
       var match = this.props.match;
-      var _this$state = this.state,
-          toastVisible = _this$state.toastVisible,
-          toastType = _this$state.toastType,
-          toastMessage = _this$state.toastMessage;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"].Heading, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"].Title, {
         toggle: true
       }, "Filter")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"].Body, {
@@ -1681,18 +1580,16 @@ var IssueList = /*#__PURE__*/function (_React$Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "".concat(match.path, "/:id"),
         component: _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__["default"]
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-        showing: toastVisible,
-        onDismiss: this.dismissToast,
-        bsStyle: toastType
-      }, toastMessage));
+      }));
     }
   }]);
 
   return IssueList;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-
+var IssueListWithToast = Object(_withToast_jsx__WEBPACK_IMPORTED_MODULE_8__["default"])(IssueList);
+IssueListWithToast.fetchData = IssueList.fetchData;
+/* harmony default export */ __webpack_exports__["default"] = (IssueListWithToast);
 
 /***/ }),
 
@@ -2282,6 +2179,118 @@ function _graphQLFetch() {
     }, _callee, null, [[2, 14]]);
   }));
   return _graphQLFetch.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/withToast.jsx":
+/*!***************************!*\
+  !*** ./src/withToast.jsx ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return withToast; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+function withToast(OriginalComponent) {
+  return /*#__PURE__*/function (_React$Component) {
+    _inherits(ToastWrapper, _React$Component);
+
+    var _super = _createSuper(ToastWrapper);
+
+    function ToastWrapper(props) {
+      var _this;
+
+      _classCallCheck(this, ToastWrapper);
+
+      _this = _super.call(this, props);
+      _this.state = {
+        toastType: 'success',
+        toastVisible: false,
+        toastMessage: ''
+      };
+      _this.dismissToast = _this.dismissToast.bind(_assertThisInitialized(_this));
+      _this.showSuccess = _this.showSuccess.bind(_assertThisInitialized(_this));
+      _this.showError = _this.showError.bind(_assertThisInitialized(_this));
+      return _this;
+    }
+
+    _createClass(ToastWrapper, [{
+      key: "dismissToast",
+      value: function dismissToast() {
+        this.setState({
+          toastVisible: false
+        });
+      }
+    }, {
+      key: "showSuccess",
+      value: function showSuccess(message) {
+        this.setState({
+          toastVisible: true,
+          toastMessage: message,
+          toastType: 'success'
+        });
+      }
+    }, {
+      key: "showError",
+      value: function showError(message) {
+        this.setState({
+          toastVisible: true,
+          toastMessage: message,
+          toastType: 'danger'
+        });
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var _this$state = this.state,
+            toastType = _this$state.toastType,
+            toastVisible = _this$state.toastVisible,
+            toastMessage = _this$state.toastMessage;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(OriginalComponent, _extends({
+          showError: this.showError,
+          showSuccess: this.showSuccess,
+          dismissToast: this.dismissToast
+        }, this.props)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          bsStyle: toastType,
+          showing: toastVisible,
+          onDismiss: this.dismissToast
+        }, toastMessage));
+      }
+    }]);
+
+    return ToastWrapper;
+  }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 }
 
 /***/ }),
