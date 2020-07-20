@@ -7,8 +7,8 @@ import template from './template.js';
 import graphQLFetch from '../src/graphQLFetch.js';
 import store from '../src/store.js';
 
-asyn function render(req, res) {
-  const initialData = await graphQLFetch('query{about}'); 
+async function render(req, res) {
+  const initialData = await graphQLFetch('query{about}');
   store.initialData = initialData;
   const element = (
     <StaticRouter location={req.url} context={{}}>
