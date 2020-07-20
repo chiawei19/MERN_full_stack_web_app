@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "ab1093369d506390e949";
+/******/ 	var hotCurrentHash = "017b6dd1e0e96813d0aa";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1020,12 +1020,18 @@ async function render(req, res) {
   }
 
   _src_store_js__WEBPACK_IMPORTED_MODULE_5__["default"].initialData = initialData;
+  const context = {};
   const element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["StaticRouter"], {
     location: req.url,
-    context: {}
+    context: context
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src_Page_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null));
   const body = react_dom_server__WEBPACK_IMPORTED_MODULE_1___default.a.renderToString(element);
-  res.send(Object(_template_js__WEBPACK_IMPORTED_MODULE_4__["default"])(body, initialData));
+
+  if (context.url) {
+    res.redirect(301, context.url);
+  } else {
+    res.send(Object(_template_js__WEBPACK_IMPORTED_MODULE_4__["default"])(body, initialData));
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (render);
@@ -1484,109 +1490,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return IssueDetail; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
 
-
-
-class IssueDetail extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  constructor() {
-    super();
-    this.state = {
-      issue: {},
-      toastVisible: false,
-      toastMessage: '',
-      toastType: 'info'
-    };
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
+function IssueDetail({
+  issue
+}) {
+  if (issue) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Description"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, issue.description));
   }
 
-  componentDidMount() {
-    this.loadData();
-  }
-
-  componentDidUpdate(prevProps) {
-    const {
-      match: {
-        params: {
-          id: prevId
-        }
-      }
-    } = prevProps;
-    const {
-      match: {
-        params: {
-          id
-        }
-      }
-    } = this.props;
-
-    if (prevId !== id) {
-      this.loadData();
-    }
-  }
-
-  showError(message) {
-    this.setState({
-      toastVisible: true,
-      toastMessage: message,
-      toastType: 'danger'
-    });
-  }
-
-  dismissToast() {
-    this.setState({
-      toastVisible: false
-    });
-  }
-
-  async loadData() {
-    const {
-      match: {
-        params: {
-          id
-        }
-      }
-    } = this.props;
-    const query = `query issue($id: Int!) {
-      issue (id: $id) {
-        id description
-      }
-    }`;
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_1__["default"])(query, {
-      id: parseInt(id, 10)
-    }, this.showError);
-
-    if (data) {
-      this.setState({
-        issue: data.issue
-      });
-    } else {
-      this.setState({
-        issue: {}
-      });
-    }
-  }
-
-  render() {
-    const {
-      issue: {
-        description
-      }
-    } = this.state;
-    const {
-      toastVisible,
-      toastType,
-      toastMessage
-    } = this.state;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Description"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      showing: toastVisible,
-      onDismiss: this.dismissToast,
-      bsStyle: toastType
-    }, toastMessage));
-  }
-
+  return null;
 }
 
 /***/ }),
@@ -2176,16 +2088,33 @@ __webpack_require__.r(__webpack_exports__);
 class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   static async fetchData(match, search, showError) {
     const params = new url_search_params__WEBPACK_IMPORTED_MODULE_1___default.a(search);
-    const vars = {};
+    const vars = {
+      hasSelection: false,
+      selectedId: 0
+    };
     if (params.get('status')) vars.status = params.get('status');
     const effortMin = parseInt(params.get('effortMin'), 10);
     if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
     const effortMax = parseInt(params.get('effortMax'), 10);
     if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+    const {
+      params: {
+        id
+      }
+    } = match;
+    const idInt = parseInt(id, 10);
+
+    if (!Number.isNaN(idInt)) {
+      vars.hasSelection = true;
+      vars.selectedId = idInt;
+    }
+
     const query = `query issueList(
       $status: StatusType
       $effortMin: Int
       $effortMax: Int
+      $hasSelection: Boolean!
+      $selectedId: Int!
     ) {
       issueList (
         status: $status
@@ -2195,6 +2124,9 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         id title status owner
         created effort due
       }
+      issue(id: $selectedId) @include (if : $hasSelection) {
+        id description
+      }
     }`;
     const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_7__["default"])(query, vars, showError);
     return data;
@@ -2203,9 +2135,11 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor() {
     super();
     const issues = _store_js__WEBPACK_IMPORTED_MODULE_8__["default"].initialData ? _store_js__WEBPACK_IMPORTED_MODULE_8__["default"].initialData.issueList : null;
+    const selectedIssue = _store_js__WEBPACK_IMPORTED_MODULE_8__["default"].initialData ? _store_js__WEBPACK_IMPORTED_MODULE_8__["default"].initialData.issue : null;
     delete _store_js__WEBPACK_IMPORTED_MODULE_8__["default"].initialData;
     this.state = {
-      issues
+      issues,
+      selectedIssue
     };
     this.closeIssue = this.closeIssue.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
@@ -2222,15 +2156,25 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       location: {
         search: prevSearch
+      },
+      match: {
+        params: {
+          id: prevId
+        }
       }
     } = prevProps;
     const {
       location: {
         search
+      },
+      match: {
+        params: {
+          id
+        }
       }
     } = this.props;
 
-    if (prevSearch !== search) {
+    if (prevSearch !== search || prevId !== id) {
       this.loadData();
     }
   }
@@ -2240,13 +2184,15 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       location: {
         search
       },
+      match,
       showError
     } = this.props;
-    const data = await IssueList.fetchData(null, search, showError);
+    const data = await IssueList.fetchData(match, search, showError);
 
     if (data) {
       this.setState({
-        issues: data.issueList
+        issues: data.issueList,
+        selectedIssue: data.issue
       });
     }
   }
@@ -2334,8 +2280,8 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     } = this.state;
     if (issues == null) return null;
     const {
-      match
-    } = this.props;
+      selectedIssue
+    } = this.state;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"].Heading, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"].Title, {
       toggle: true
     }, "Filter")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Panel"].Body, {
@@ -2344,9 +2290,8 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       issues: issues,
       closeIssue: this.closeIssue,
       deleteIssue: this.deleteIssue
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-      path: `${match.path}/:id`,
-      component: _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__["default"]
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      issue: selectedIssue
     }));
   }
 
@@ -2844,7 +2789,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const routes = [{
-  path: '/issues',
+  path: '/issues/:id?',
   component: _IssueList_jsx__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
   path: '/edit/:id',
