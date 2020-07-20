@@ -14,7 +14,7 @@ import store from './store.js';
 import withToast from './withToast.jsx';
 
 class IssueEdit extends React.Component {
-  static async fetchData(match, showError) {
+  static async fetchData(match, search, showError) {
     const query = `query issue($id: Int!) {
       issue(id: $id) {
         id title status owner
@@ -100,7 +100,7 @@ class IssueEdit extends React.Component {
 
   async loadData() {
     const { match } = this.props;
-    const data = await IssueEdit.fetchData(match, this.showError);
+    const data = await IssueEdit.fetchData(match, null, this.showError);
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
   }
 

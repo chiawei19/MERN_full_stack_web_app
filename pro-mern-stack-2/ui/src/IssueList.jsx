@@ -7,32 +7,11 @@ import IssueFilter from './IssueFilter.jsx';
 import IssueTable from './IssueTable.jsx';
 import IssueDetail from './IssueDetail.jsx';
 import graphQLFetch from './graphQLFetch.js';
+import store from './store.js';
 import withToast from './withToast.jsx';
 
 class IssueList extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      issues: [],
-    };
-    this.closeIssue = this.closeIssue.bind(this);
-    this.deleteIssue = this.deleteIssue.bind(this);
-  }
-
-  componentDidMount() {
-    this.loadData();
-  }
-
-  componentDidUpdate(prevProps) {
-    const { location: { search: prevSearch } } = prevProps;
-    const { location: { search } } = this.props;
-    if (prevSearch !== search) {
-      this.loadData();
-    }
-  }
-
-  async loadData() {
-    const { location: { search }, showError } = this.props;
+  static async fetchData(match, search, showError) {
     const params = new URLSearchParams(search);
     const vars = {};
     if (params.get('status')) vars.status = params.get('status');
@@ -58,6 +37,37 @@ class IssueList extends React.Component {
     }`;
 
     const data = await graphQLFetch(query, vars, showError);
+    return data;
+  }
+
+  constructor() {
+    super();
+    const issues = store.initialData ? store.initialData.issueList : null;
+    delete store.initialData;
+    this.state = {
+      issues,
+    };
+    this.closeIssue = this.closeIssue.bind(this);
+    this.deleteIssue = this.deleteIssue.bind(this);
+  }
+
+  componentDidMount() {
+    const { issues } = this.state;
+    if (issues == null) this.loadData();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { location: { search: prevSearch } } = prevProps;
+    const { location: { search } } = this.props;
+    if (prevSearch !== search) {
+      this.loadData();
+    }
+  }
+
+  async loadData() {
+    const { location: { search }, showError } = this.props;
+
+    const data = await IssueList.fetchData(null, search, showError);
     if (data) {
       this.setState({ issues: data.issueList });
     }
@@ -110,6 +120,7 @@ class IssueList extends React.Component {
 
   render() {
     const { issues } = this.state;
+    if (issues == null) return null;
     const { match } = this.props;
 
     return (
