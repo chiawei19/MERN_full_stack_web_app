@@ -3,3 +3,5 @@ package-lock.json
 commands.txt
 node_modules/
 .env
+credentials.json
+

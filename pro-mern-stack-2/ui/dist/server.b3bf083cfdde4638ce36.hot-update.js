@@ -10,11 +10,13 @@ exports.modules = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SigninNavItem; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _withToast_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./withToast.jsx */ "./src/withToast.jsx");
+
+
 
 
 class SigninNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
@@ -22,6 +24,7 @@ class SigninNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     super(props);
     this.state = {
       showing: false,
+      disabled: true,
       user: {
         signedIn: false,
         givenName: ''
@@ -33,14 +36,42 @@ class SigninNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     this.signIn = this.signIn.bind(this);
   }
 
-  signIn() {
-    this.hideModal();
-    this.setState({
-      user: {
-        signedIn: true,
-        givenName: 'User1'
+  componentDidMount() {
+    const clientId = window.ENV.GOOGLE_CLIENT_ID;
+    console.log(clientId);
+    if (!clientId) return;
+    window.gapi.load('auth2', () => {
+      if (!window.gapi.auth2.getAuthInstance()) {
+        window.gapi.auth2.init({
+          client_id: clientId
+        }).then(() => {
+          this.setState({
+            disabled: false
+          });
+        });
       }
     });
+  }
+
+  async signIn() {
+    this.hideModal();
+    const {
+      showError
+    } = this.props;
+
+    try {
+      const auth2 = window.gapi.auth2.getAuthInstance();
+      const googleUser = await auth2.signIn();
+      const givenName = googleUser.getBasicProfile().getGivenName();
+      this.setState({
+        user: {
+          signedIn: true,
+          givenName
+        }
+      });
+    } catch (error) {
+      showError(`Error authenticating with Google: ${error.error}`);
+    }
   }
 
   signOut() {
@@ -53,6 +84,16 @@ class SigninNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   }
 
   showModal() {
+    const clientId = window.ENV.GOOGLE_CLIENT_ID;
+    const {
+      showError
+    } = this.props;
+
+    if (!clientId) {
+      showError('Missing environment variable GOOGLE_CLIENT_ID');
+      return;
+    }
+
     this.setState({
       showing: true
     });
@@ -79,7 +120,8 @@ class SigninNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     }
 
     const {
-      showing
+      showing,
+      disabled
     } = this.state;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["NavItem"], {
       onClick: this.showModal
@@ -92,17 +134,23 @@ class SigninNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       closeButton: true
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Title, null, "Sign in")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
       block: true,
+      disabled: disabled,
       bsStyle: "primary",
       onClick: this.signIn
-    }, "Sign In")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: "https://goo.gl/4yjp6B",
+      alt: "Sign In"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
       bsStyle: "link",
       onClick: this.hideModal
-    }, "Can"))));
+    }, "Cancel"))));
   }
 
 }
 
+/* harmony default export */ __webpack_exports__["default"] = (Object(_withToast_jsx__WEBPACK_IMPORTED_MODULE_2__["default"])(SigninNavItem));
+
 /***/ })
 
 };
-//# sourceMappingURL=server.4803d6dcdf282b2f92a6.hot-update.js.map
+//# sourceMappingURL=server.b3bf083cfdde4638ce36.hot-update.js.map

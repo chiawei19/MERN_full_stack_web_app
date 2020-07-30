@@ -67,3 +67,6 @@ with
 ## Chapter 13: Advanced Features
 ![snapshot of chp13](./snapshot/chp13_1_snapshot.png)
 ![snapshot of chp13](./snapshot/chp13_2_snapshot.png)
+
+## Chapter 14: Authentication
+OAuth2 credentials: Add "http://localhost:8080" to Restrictions- Authorized JavaScript origins. Add Google Analytics Api to the project and enable it. Then clear browsing cache.
