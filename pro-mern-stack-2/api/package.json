@@ -17,8 +17,10 @@
     "homepage": "https://github.com/cw19cs/pro-mern-stack-2",
     "dependencies": {
         "apollo-server-express": "^2.3.1",
+        "body-parser": "^1.19.0",
         "dotenv": "^6.2.0",
         "express": "^4.16.4",
+        "google-auth-library": "^2.0.2",
         "graphql": "^14.2.1",
         "mongodb": "^3.1.10",
         "nodemon": "^1.18.9"
