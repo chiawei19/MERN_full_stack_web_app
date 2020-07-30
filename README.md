@@ -63,3 +63,7 @@ with
 
 ## Chapter 12: Server Rendering
 ![snapshot of chp12](./snapshot/chp12_snapshot.png)
+
+## Chapter 13: Advanced Features
+![snapshot of chp13](./snapshot/chp13_1_snapshot.png)
+![snapshot of chp13](./snapshot/chp13_2_snapshot.png)
