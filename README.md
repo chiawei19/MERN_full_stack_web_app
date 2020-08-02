@@ -69,4 +69,5 @@ with
 ![snapshot of chp13](./snapshot/chp13_2_snapshot.png)
 
 ## Chapter 14: Authentication
-OAuth2 credentials: Add "http://localhost:8080" to Restrictions- Authorized JavaScript origins. Add Google Analytics Api to the project and enable it. Then clear browsing cache.
+![snapshot of chp14](./snapshot/chp14_snapshot.png)
+OAuth2 credentials: Add "http://localhost:8080" and "http://ui.promernstack.com:8000" to Restrictions- Authorized JavaScript origins. Add Google Analytics Api to the project and enable it. Then clear browsing cache.
