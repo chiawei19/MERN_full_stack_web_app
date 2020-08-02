@@ -34,13 +34,6 @@ function getUser(req) {
   }
 }
 
-routes.post('/signout', async (req, res) => {
-  res.clearCookie('jwt', {
-    domain: process.env.COOKIE_DOMAIN,
-  });
-  res.json({ status: 'ok' });
-});
-
 routes.post('/signin', async (req, res) => {
   if (!JWT_SECRET) {
     res.status(500).send('Missing JWT_SECRET. Refusing to authenticate');
@@ -63,16 +56,20 @@ routes.post('/signin', async (req, res) => {
 
   const { given_name: givenName, name, email } = payload;
   const credentials = {
-    signedIn: true,
-    givenName,
-    name,
-    email,
+    signedIn: true, givenName, name, email,
   };
 
   const token = jwt.sign(credentials, JWT_SECRET);
-  res.cookie('jwt', token, { httpOnly: true });
+  res.cookie('jwt', token, { httpOnly: true, domain: process.env.COOKIE_DOMAIN });
 
   res.json(credentials);
+});
+
+routes.post('/signout', async (req, res) => {
+  res.clearCookie('jwt', {
+    domain: process.env.COOKIE_DOMAIN,
+  });
+  res.json({ status: 'ok' });
 });
 
 routes.post('/user', (req, res) => {
@@ -88,4 +85,10 @@ function mustBeSignedIn(resolver) {
   };
 }
 
-module.exports = { routes, getUser, mustBeSignedIn };
+function resolveUser(_, args, { user }) {
+  return user;
+}
+
+module.exports = {
+  routes, getUser, mustBeSignedIn, resolveUser,
+};
